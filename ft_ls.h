@@ -6,8 +6,8 @@
 #include <string.h>
 #include <dirent.h>
 #include <stdbool.h>
-#include <sys/stat.h>
 #include <stdio.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -18,8 +18,6 @@
 #include <grp.h>
 #include <unistd.h>
 #include "ft_ls.h"
-#include <stdbool.h>
-#include <sys/types.h>
 // ----------------------
 
 typedef struct s_output {
@@ -58,7 +56,10 @@ void	error(DIR *dir);
 char	*ft_strdup(const char *s1);
 int		ft_strlen(const char *str);
 void	flagset(t_flag *flags) ;
-void	display_permissions(mode_t mode);
+void printList(t_output *head);
+size_t get_directory_size(const char *path);
+void sortListAlphabetically(t_output **head);
+void	display_permissions(mode_t mode, const char *full_path);
 void	get_folder_paths(const char *path, char ***result, int *count);
 void	my_qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void *));
 
