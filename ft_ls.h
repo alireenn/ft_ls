@@ -56,13 +56,13 @@ void	error(DIR *dir);
 char	*ft_strdup(const char *s1);
 int		ft_strlen(const char *str);
 void	flagset(t_flag *flags) ;
-void printList(t_output *head);
-size_t get_directory_size(const char *path);
-void sortListAlphabetically(t_output **head);
+void	printList(t_output *head);
+size_t	get_directory_blocks(const char *path, t_flag flags);
+void	sortListAlphabetically(t_output **head);
 void	display_permissions(mode_t mode, const char *full_path);
-void	get_folder_paths(const char *path, char ***result, int *count);
+void	get_folder_paths(const char *path, char ***result, int *count, bool flagA);
 void	my_qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void *));
-
+size_t get_directory_size(const char *path);
 
 
 #endif

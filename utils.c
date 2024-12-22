@@ -3,7 +3,7 @@
 #define PATH_SIZE 1024
 
 // Funzione ricorsiva per raccogliere i percorsi di cartelle e sottocartelle
-void get_folder_paths(const char *path, char ***result, int *count) {
+void get_folder_paths(const char *path, char ***result, int *count, bool flagA) {
 	struct dirent *entry;
 	DIR *dp;
 
@@ -22,12 +22,50 @@ void get_folder_paths(const char *path, char ***result, int *count) {
 				snprintf(new_path, sizeof(new_path), "%s/%s", path, entry->d_name);
 				(*result) = realloc(*result, sizeof(char *) * (++(*count)));
 				(*result)[*count - 1] = strdup(new_path);
-				get_folder_paths(new_path, result, count); // Ricorsivamente esplora la sottocartella
+				get_folder_paths(new_path, result, count, flagA); // Ricorsivamente esplora la sottocartella
 			}
 		}
 	}
 
 	closedir(dp);
+}
+
+size_t get_directory_blocks(const char *path, t_flag flags) {
+	struct stat file_stat;
+	struct dirent *entry;
+	DIR *dir = opendir(path);
+	size_t total_blocks = 0;
+
+	if (!dir) {
+		perror("opendir");
+		return 0;  // Ritorna 0 in caso di errore
+	}
+
+	while ((entry = readdir(dir)) != NULL) {
+		// Ignora "." e ".."
+		if (!flags.a &&(entry->d_name[0] == '.') ) {
+			continue;
+		}
+		
+		char full_path[PATH_MAX];
+		snprintf(full_path, sizeof(full_path), "%s/%s", path, entry->d_name);
+
+		// Ottieni informazioni sul file o directory
+		if (lstat(full_path, &file_stat) == -1) {
+			perror("lstat");
+			continue;
+		}
+
+		// Somma i blocchi solo per i file e i link simbolici
+		if (S_ISREG(file_stat.st_mode) || S_ISDIR(file_stat.st_mode)  || S_ISLNK(file_stat.st_mode)) {
+			total_blocks += file_stat.st_blocks;
+		}
+	}
+
+	closedir(dir);
+
+	// Dividi i blocchi totali per 2 per ottenere il totale in KB come `ls -l`
+	return total_blocks / 2;
 }
 
 
@@ -44,7 +82,7 @@ size_t get_directory_size(const char *path) {
 
 	while ((entry = readdir(dir)) != NULL) {
 		// Escludi file nascosti se necessario (se non ci sono opzioni specifiche)
-		if (entry->d_name[0] == '.' && entry->d_name[1] != '\0') {
+		if ((strcmp(entry->d_name, ".") == 0) || strcmp(entry->d_name, "..") == 0) {
 			continue;
 		}
 		char full_path[PATH_MAX];
@@ -68,7 +106,6 @@ size_t get_directory_size(const char *path) {
 	closedir(dir);
 	return total_size;
 }
-
 
 // Function to display permissions
 void display_permissions(mode_t mode, const char *full_path) {

@@ -91,10 +91,11 @@ void list_directory(const char *path, t_flag flags) {
 		return;
 	}
 
+	printf("total: %ld\n", get_directory_blocks(path, flags) );
 	struct dirent *entry;
 	t_output *output = NULL; // Inizializza la lista concatenata come vuota
 
-	printList(output);
+	//printList(output);
 	while ((entry = readdir(dir)) != NULL) {
 		addToList(entry, flags, &output);
 	}
@@ -102,11 +103,13 @@ void list_directory(const char *path, t_flag flags) {
 	//if (flags.r)
 	while (output != NULL) {
 		if (!flags.a && output->entry->d_name[0] == '.')
-			output = output->next;
+		{
+			//while (output->entry->d_name[0] == '.' && output->next != NULL)
+				output = output->next;
+		}
 		else {
 			if (flags.l)
 			{
-				printf("total: %ld\n", get_directory_size(path) / 512);
 				display_file_details(path, output->entry);
 			}
 			else {
@@ -114,8 +117,8 @@ void list_directory(const char *path, t_flag flags) {
 					printf("\t");
 				printf("%s\n", output->entry->d_name);
 			}
+			output = output->next;
 		}
-		output = output->next;
 	}
 
 	closedir(dir);
@@ -146,7 +149,7 @@ int main(int argc, char *argv[]) {
 			flags.l = 1;
 		} else if (strcmp(argv[i], "-R") == 0) {
 			flags.R = 1;
-			get_folder_paths(path, &folders, &folder_count);
+			get_folder_paths(path, &folders, &folder_count, flags.a);
 		} else {
 			path = argv[i];
 		}
@@ -159,7 +162,7 @@ int main(int argc, char *argv[]) {
 	
 	if (flags.R == 1) {
 		for (int i = 0; i < folder_count; i++) {
-			if (!flags.a && (folders[i][0] == '.' && folders[i][1] != '/' && folders[i][2] == '.'))
+			if (!flags.a && (folders[i][0] == '.' && folders[i][1] == '/' && folders[i][2] == '.'))
 				free (folders[i]);
 			else {
 				printf("%s:\n", folders[i]);
