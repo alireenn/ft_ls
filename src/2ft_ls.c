@@ -110,8 +110,6 @@ void list_directory(const char *path,t_flag flags) {
 				display_file_details(path, output->entry);
 			}
 			else {
-				if (flags.R)
-					printf("\t");
 				printf("%s   ", output->entry->d_name);
 			}
 			output = output->next;
