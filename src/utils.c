@@ -108,7 +108,7 @@ int get_directory_size(const char *path) {
 }
 
 // Function to display permissions
-
+/*
 void _display_permissions(mode_t mode, const char *path) {
     struct stat st;
     if (lstat(path, &st) == -1) {
@@ -172,7 +172,7 @@ void _display_permissions(mode_t mode, const char *path) {
 
     ft_putchar('\n');
 }
-
+*/
 void display_permissions(mode_t mode, const char *full_path) {
 	char permissions[11] = {0}; // Stringa per i permessi
 	int	is_symlink;

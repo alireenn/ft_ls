@@ -32,7 +32,7 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	// Se il file è un link simbolico, mostra il percorso di destinazione
 	if (S_ISLNK(file_stat.st_mode)) {
 		char symlink_target[1024];
-		sint len = rea  dlink(full_path, symlink_target, sizeof(symlink_target) - 1);
+		int len = readlink(full_path, symlink_target, sizeof(symlink_target) - 1);
 		if (len != -1) {
 			symlink_target[len] = '\0'; // Assicurati che la stringa sia terminata
 			printf(" -> %s", symlink_target);
@@ -66,7 +66,6 @@ void addToList(struct dirent *entry, t_output **output) {
 
     if (*output == NULL) {
         *output = new_node;
-		printf("foldre c: \n" );
     } else {
         t_output *current = *output;
         while (current->next != NULL) {
@@ -84,7 +83,7 @@ void list_directory(const char *path,t_flag flags) {
 	}
 
 	if(flags.l)
-		printf("total: %ld\n", get_directory_blocks(path, flags) );
+		printf("total: %d\n", get_directory_blocks(path, flags) );
 	struct dirent *entry;
 	t_output *output = NULL;
 
