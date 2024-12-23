@@ -261,6 +261,7 @@ void sortListAlphabetically(t_output **head) {
 		lptr = ptr1; // Aggiorna l'ultima posizione ordinata
 	} while (swapped);
 }
+
 void printList(t_output *head) {
 	t_output *current = head; // Puntatore al nodo corrente
 	while (current != NULL) {

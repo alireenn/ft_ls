@@ -36,23 +36,6 @@ typedef struct s_flag {
 	bool r;
 } t_flag;
 
-// Definizione delle strutture
-typedef struct FileInfo {
-	char	*name;
-	char	*owner;
-	char	*group;
-	char	*path;
-	char	*symlink_target;
-	mode_t	mode;
-	uid_t	uid;
-	gid_t	gid;
-	off_t	size;
-	time_t	mtime;
-	nlink_t	nlink;
-	bool	is_symlink;
-} FileInfo;
-
-
 //-----------------------
 
 int		ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2);

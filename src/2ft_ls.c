@@ -92,9 +92,8 @@ void list_directory(const char *path,t_flag flags) {
 	}
 
 	t_output *head = output;
-	
+		
 	sortListAlphabetically(&output);
-	
 	if (flags.r)
 		reverseList(&output);
 	
