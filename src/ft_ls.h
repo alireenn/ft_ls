@@ -40,6 +40,7 @@ typedef struct s_flag {
 
 //-----------------------
 
+void 	sort_paths_by_time(char **paths, int count);
 void 	sort_paths_alphabetically(char **paths, int count);
 void	sort_paths_reverse(char **paths, int count);
 int		ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2);

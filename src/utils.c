@@ -155,23 +155,72 @@ int compare_paths(const void *a, const void *b) {
     return ft_strcmp(path1, path2);
 }
 
-void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *)) {
-	char *arr = (char *)base;
-	for (int i = 0; i < nitems - 1; i++) {
-		for (int j = i + 1; j < nitems; j++) {
-			char *elem_i = arr + i * size;
-			char *elem_j = arr + j * size;
-			if (compar(elem_i, elem_j) > 0) {
-				// Scambia gli elementi
-				char temp[size];
-				ft_memcpy(temp, elem_i, size);
-				ft_memcpy(elem_i, elem_j, size);
-				ft_memcpy(elem_j, temp, size);
-			}
-		}
-	}
+
+
+// Funzione di partizione per QuickSort
+int partition(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
+    char *arr = (char *)base;
+    char *pivot = arr + high * size;
+    int i = low - 1;
+
+    for (int j = low; j < high; j++) {
+        char *elem_j = arr + j * size;
+        if (compar(elem_j, pivot) < 0) {
+            i++;
+            // Scambio
+            char temp[size];
+            memcpy(temp, elem_j, size);
+            memcpy(elem_j, arr + i * size, size);
+            memcpy(arr + i * size, temp, size);
+        }
+    }
+
+    // Metti il pivot nella posizione corretta
+    char temp[size];
+    memcpy(temp, arr + (i + 1) * size, size);
+    memcpy(arr + (i + 1) * size, pivot, size);
+    memcpy(pivot, temp, size);
+
+    return i + 1;
 }
 
+// Funzione QuickSort ricorsiva
+void quicksort(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
+    if (low < high) {
+        int pi = partition(base, low, high, size, compar);
+        quicksort(base, low, pi - 1, size, compar);  // Ordinamento della parte sinistra
+        quicksort(base, pi + 1, high, size, compar); // Ordinamento della parte destra
+    }
+}
+
+void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *)) {
+    quicksort(base, 0, nitems - 1, size, compar);
+}
+
+int compare_paths_by_time(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    struct stat stat1, stat2;
+
+    if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
+        perror("Errore nell'accedere ai file");
+        exit(EXIT_FAILURE);
+    }
+
+    if (stat1.st_mtime > stat2.st_mtime) {
+        return -1;
+    } else if (stat1.st_mtime < stat2.st_mtime) {
+        return 1;
+    } else {
+        return strcmp(path1,path2);
+    }
+}
+
+void sort_paths_by_time(char **paths, int count) {
+	ft_qsort(paths, count, sizeof(char *), compare_paths_by_time);
+}
+
+// Funzione per ordinare un vettore di path in ordine alfabetico
 void sort_paths_alphabetically(char **paths, int count) {
     ft_qsort(paths, count, sizeof(char *), compare_paths);
 }

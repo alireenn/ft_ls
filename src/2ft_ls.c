@@ -20,6 +20,7 @@ void display_file_details(const char *path, const struct dirent *entry) {
 
 	// Dimensione del file
 	ft_printf("%d ", file_stat.st_size);
+	ft_printf("%d ", file_stat.st_size);
 
 	// Tempo di modifica
 	char time_buf[20];
@@ -163,6 +164,12 @@ int main(int argc, char *argv[]) {
 			path = argv[i];
 		}
 	}
+	if (flags.r)
+		sort_paths_reverse(folders, folder_count);
+	if (flags.t)
+	{	
+		sort_paths_by_time(folders, folder_count);
+	}
 	if (flags.R)
 		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
@@ -170,11 +177,6 @@ int main(int argc, char *argv[]) {
 		ft_printf("\n");
 	
 	if (flags.R == 1) {
-		if (flags.r)
-			sort_paths_reverse(folders, folder_count);
-		if (flags.t)
-			ft_printf("Ordina per tempo di modifica\n");
-		
 		for (int i = 0; i < folder_count; i++) {
 			if (!flags.a && (folders[i][0] == '.' && folders[i][1] == '/' && folders[i][2] == '.'))
 			{
