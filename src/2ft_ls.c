@@ -12,22 +12,22 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	}
 
 	display_permissions(file_stat.st_mode, full_path);
-	printf("%ld ", file_stat.st_nlink);
+	ft_printf("%ld ", file_stat.st_nlink);
 
 	struct passwd *pwd = getpwuid(file_stat.st_uid);
 	struct group *grp = getgrgid(file_stat.st_gid);
-	printf("%s %s ", pwd ? pwd->pw_name : "?", grp ? grp->gr_name : "?");
+	ft_printf("%s %s ", pwd ? pwd->pw_name : "?", grp ? grp->gr_name : "?");
 
 	// Dimensione del file
-	printf("%ld ", file_stat.st_size);
+	ft_printf("%ld ", file_stat.st_size);
 
 	// Tempo di modifica
 	char time_buf[20];
 	strftime(time_buf, sizeof(time_buf), "%b %d %H:%M", localtime(&file_stat.st_mtime));
-	printf("%s ", time_buf);
+	ft_printf("%s ", time_buf);
 
 	// Nome del file
-	printf("%s", entry->d_name);
+	ft_printf("%s", entry->d_name);
 
 	// Se il file è un link simbolico, mostra il percorso di destinazione
 	if (S_ISLNK(file_stat.st_mode)) {
@@ -35,13 +35,13 @@ void display_file_details(const char *path, const struct dirent *entry) {
 		int len = readlink(full_path, symlink_target, sizeof(symlink_target) - 1);
 		if (len != -1) {
 			symlink_target[len] = '\0'; // Assicurati che la stringa sia terminata
-			printf(" -> %s", symlink_target);
+			ft_printf(" -> %s", symlink_target);
 		} else {
 			perror("readlink");
 		}
 	}
 
-	printf("\n"); // Fine della riga
+	ft_printf("\n"); // Fine della riga
 }
 
 
@@ -82,16 +82,15 @@ void list_directory(const char *path,t_flag flags) {
 		return;
 	}
 
-	if(flags.l)
-		printf("total: %d\n", get_directory_blocks(path, flags) );
-	struct dirent *entry;
 	t_output *output = NULL;
+	if(flags.l)
+		ft_printf("total: %d\n", get_directory_blocks(path, flags) );
+	struct dirent *entry;
 
 	while ((entry = readdir(dir)) != NULL) {
 		addToList(entry, &output);
 	}
 
-	t_output *head = output;
 		
 	sortListAlphabetically(&output);
 	if (flags.r)
@@ -100,6 +99,7 @@ void list_directory(const char *path,t_flag flags) {
 	if (flags.t)
 		sortListByTime(&output, path);
 	
+	t_output *head = output;
 	while (output != NULL) {
 		if (!flags.a && output->entry->d_name[0] == '.')
 			output = output->next;
@@ -109,12 +109,12 @@ void list_directory(const char *path,t_flag flags) {
 				display_file_details(path, output->entry);
 			}
 			else {
-				printf("%s   ", output->entry->d_name);
+				ft_printf("%s   ", output->entry->d_name);
 			}
 			output = output->next;
 		}
 	}
-	printf("\n");
+	ft_printf("\n");
 	closedir(dir);
 
 	while (head != NULL) {
@@ -165,10 +165,10 @@ int main(int argc, char *argv[]) {
 		}
 	}
 	if (flags.R)
-		printf("%s:\n", path);	
+		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
 	if (flags.R)
-		printf("\n");
+		ft_printf("\n");
 	
 	if (flags.R == 1) {
 		for (int i = 0; i < folder_count; i++) {
@@ -177,9 +177,9 @@ int main(int argc, char *argv[]) {
 				free(folders[i]);
 			}
 			else {
-                printf("%s:\n", folders[i]);
+                ft_printf("%s:\n", folders[i]);
                 list_directory(folders[i], flags);
-                printf("\n");
+                ft_printf("\n");
                 free(folders[i]);
             }
 		}

@@ -107,72 +107,6 @@ int get_directory_size(const char *path) {
 	return total_size;
 }
 
-// Function to display permissions
-/*
-void _display_permissions(mode_t mode, const char *path) {
-    struct stat st;
-    if (lstat(path, &st) == -1) {
-        perror("lstat");
-        return;
-    }
-
-    // Stampa il tipo di file
-    if (S_ISDIR(st.st_mode)) {
-        ft_putstr("d");
-    } else if (S_ISREG(st.st_mode)) {
-        ft_putstr("-");
-    } else if (S_ISLNK(st.st_mode)) {
-        ft_putstr("l");
-    }
-
-    // Stampa i permessi
-    ft_putchar((st.st_mode & S_IRUSR) ? 'r' : '-');
-    ft_putchar((st.st_mode & S_IWUSR) ? 'w' : '-');
-    ft_putchar((st.st_mode & S_IXUSR) ? 'x' : '-');
-    ft_putchar((st.st_mode & S_IRGRP) ? 'r' : '-');
-    ft_putchar((st.st_mode & S_IWGRP) ? 'w' : '-');
-    ft_putchar((st.st_mode & S_IXGRP) ? 'x' : '-');
-    ft_putchar((st.st_mode & S_IROTH) ? 'r' : '-');
-    ft_putchar((st.st_mode & S_IWOTH) ? 'w' : '-');
-    ft_putchar((st.st_mode & S_IXOTH) ? 'x' : '-');
-
-    ft_putchar(' ');
-
-    // Stampa il numero di hard link
-    ft_putnbr(st.st_nlink);
-    ft_putchar(' ');
-
-    // Stampa il proprietario
-    struct passwd *pw = getpwuid(st.st_uid);
-    if (pw) {
-        ft_putstr(pw->pw_name);
-    } else {
-        ft_putnbr(st.st_uid);
-    }
-    ft_putchar(' ');
-
-    // Stampa il gruppo
-    struct group *gr = getgrgid(st.st_gid);
-    if (gr) {
-        ft_putstr(gr->gr_name);
-    } else {
-        ft_putnbr(st.st_gid);
-    }
-    ft_putchar(' ');
-
-    // Stampa la dimensione del file
-    ft_putnbr(st.st_size);
-    ft_putchar(' ');
-
-    // Stampa la data di ultima modifica
-    char *time_str = ctime(&st.st_mtime);
-    if (time_str) {
-        ft_putstr(time_str);
-    }
-
-    ft_putchar('\n');
-}
-*/
 void display_permissions(mode_t mode, const char *full_path) {
 	char permissions[11] = {0}; // Stringa per i permessi
 	int	is_symlink;
@@ -208,7 +142,7 @@ void display_permissions(mode_t mode, const char *full_path) {
 
 	permissions[10] = '\0'; // Terminatore della stringa
 
-	printf("%s ", permissions); // Stampa i permessi
+	ft_printf("%s ", permissions); // Stampa i permessi
 }
 
 // Funzione di confronto per ordinare in ordine crescente
@@ -265,7 +199,7 @@ void sortListAlphabetically(t_output **head) {
 void printList(t_output *head) {
 	t_output *current = head; // Puntatore al nodo corrente
 	while (current != NULL) {
-		printf("PRINTLIST -> %s\n", current->entry->d_name); // Stampa il nome dell'entry
+		ft_printf("PRINTLIST -> %s\n", current->entry->d_name); // Stampa il nome dell'entry
 		current = current->next; // Passa al prossimo nodo
 	}
 }
@@ -276,16 +210,6 @@ void error(DIR *dir)
 		closedir(dir);
 	perror("Bad malloc\n");
 	exit (1);
-}
-
-int	ft_strlen(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
 }
 
 char	*ft_strdup(const char *s1)
