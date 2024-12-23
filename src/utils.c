@@ -175,6 +175,28 @@ void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, cons
 	}
 }
 
+int compare_paths_by_time(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    struct stat stat1, stat2;
+
+    if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
+        perror("Errore nell'accedere ai file");
+        exit(EXIT_FAILURE);
+    }
+
+    if (stat1.st_mtime > stat2.st_mtime) {
+        return -1;
+    } else if (stat1.st_mtime < stat2.st_mtime) {
+        return 1;
+    } else {
+        return strcmp(path1,path2);
+    }
+}
+
+void sort_paths_by_time(char **paths, int count) {
+	ft_qsort(paths, count, sizeof(char *), compare_paths_by_time);
+}
 
 // Funzione per ordinare un vettore di path in ordine alfabetico
 void sort_paths_alphabetically(char **paths, int count) {
