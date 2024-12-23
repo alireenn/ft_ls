@@ -19,7 +19,7 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	ft_printf("%s %s ", pwd ? pwd->pw_name : "?", grp ? grp->gr_name : "?");
 
 	// Dimensione del file
-	ft_printf("%ld ", file_stat.st_size);
+	ft_printf("%d ", file_stat.st_size);
 
 	// Tempo di modifica
 	char time_buf[20];
@@ -29,19 +29,18 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	// Nome del file
 	ft_printf("%s", entry->d_name);
 
-	// Se il file è un link simbolico, mostra il percorso di destinazione
 	if (S_ISLNK(file_stat.st_mode)) {
 		char symlink_target[1024];
 		int len = readlink(full_path, symlink_target, sizeof(symlink_target) - 1);
 		if (len != -1) {
-			symlink_target[len] = '\0'; // Assicurati che la stringa sia terminata
+			symlink_target[len] = '\0';
 			ft_printf(" -> %s", symlink_target);
 		} else {
 			perror("readlink");
 		}
 	}
 
-	ft_printf("\n"); // Fine della riga
+	ft_printf("\n");
 }
 
 
@@ -172,10 +171,8 @@ int main(int argc, char *argv[]) {
 	
 	if (flags.R == 1) {
 		if (flags.r)
-			// Ordina le cartelle in ordine alfabetico inverso
 			sort_paths_reverse(folders, folder_count);
 		if (flags.t)
-			// Ordina le cartelle per tempo di modifica
 			ft_printf("Ordina per tempo di modifica\n");
 		
 		for (int i = 0; i < folder_count; i++) {

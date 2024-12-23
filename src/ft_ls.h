@@ -21,6 +21,8 @@
 #include <grp.h>
 #include <unistd.h>
 #include "ft_ls.h"
+
+#define PATH_SIZE 1024
 // ----------------------
 
 typedef struct s_output {
