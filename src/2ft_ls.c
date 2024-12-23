@@ -20,12 +20,12 @@ void display_file_details(const char *path, const struct dirent *entry) {
 
 	// Dimensione del file
 	ft_printf("%d ", file_stat.st_size);
-	ft_printf("%d ", file_stat.st_size);
 
 	// Tempo di modifica
 	char time_buf[20];
 	strftime(time_buf, sizeof(time_buf), "%b %d %H:%M", localtime(&file_stat.st_mtime));
-	ft_printf("%s ", time_buf);
+	//TODO fix time format
+	ft_printf("%s ", ctime(&file_stat.st_mtime));
 
 	// Nome del file
 	ft_printf("%s", entry->d_name);
