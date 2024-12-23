@@ -150,6 +150,13 @@ int compare_int(const void *a, const void *b) {
 	return (*(int *)a - *(int *)b);
 }
 
+int compare_paths(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    return strcmp(path1, path2);
+}
+
+
 // Implementazione semplice di qsort
 void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *)) {
 	char *arr = (char *)base;
@@ -166,6 +173,26 @@ void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, cons
 			}
 		}
 	}
+}
+
+
+// Funzione per ordinare un vettore di path in ordine alfabetico
+void sort_paths_alphabetically(char **paths, int count) {
+    ft_qsort(paths, count, sizeof(char *), compare_paths);
+}
+
+
+// Funzione per confrontare due stringhe in ordine inverso, usata per qsort
+int compare_paths_reverse(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    return strcmp(path2, path1);
+}
+
+
+// Funzione per ordinare un vettore di path in ordine alfabetico inverso
+void sort_paths_reverse(char **paths, int count) {
+    qsort(paths, count, sizeof(char *), compare_paths_reverse);
 }
 
 void sortListAlphabetically(t_output **head) {
@@ -262,7 +289,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
     // Verifica se il buffer è abbastanza grande
     if (size < required_size + 1) { // +1 per il terminatore nullo
         errno = ENOMEM;
-        perror("ft_ft_snprintf: buffer troppo piccolo");
+        perror("ft_snprintf: buffer troppo piccolo");
         return -1; // Indica errore
     }
     
