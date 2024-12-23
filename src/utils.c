@@ -237,7 +237,7 @@ int compare_paths_reverse(const void *a, const void *b) {
 
 // Funzione per ordinare un vettore di path in ordine alfabetico inverso
 void sort_paths_reverse(char **paths, int count) {
-    qsort(paths, count, sizeof(char *), compare_paths_reverse);
+    ft_qsort(paths, count, sizeof(char *), compare_paths_reverse);
 }
 
 void sortListAlphabetically(t_output **head) {
