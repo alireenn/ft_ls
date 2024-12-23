@@ -1,12 +1,15 @@
 #ifndef FT_LS
 #define FT_LS
 // ----------------------
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <sys/xattr.h>
+#include <stdarg.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <dirent.h>
@@ -52,19 +55,26 @@ typedef struct FileInfo {
 
 //-----------------------
 
-void	error(DIR *dir);
-char	*ft_strdup(const char *s1);
+int		ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2);
 int		ft_strlen(const char *str);
+void	error(DIR *dir);
+void	freeList(t_output *head);
 void	flagset(t_flag *flags) ;
 void	printList(t_output *head);
-size_t	get_directory_blocks(const char *path, t_flag flags);
+void ft_printf(const char *format, ...) ;
+void ft_puthex(unsigned int n);
+void ft_putnbr(int n);
+void ft_putstr(char *str);
+void ft_putchar(char c);
 void	sortListAlphabetically(t_output **head);
 void	display_permissions(mode_t mode, const char *full_path);
 void	get_folder_paths(const char *path, char ***result, int *count, bool flagA);
-void	my_qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void *));
-size_t get_directory_size(const char *path);
+void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
 void	reverseList(t_output **head);
 void	sortListByTime(t_output **head, const char *path);
+char	*ft_strdup(const char *s1);
+int	get_directory_blocks(const char *path, t_flag flags);
+int	get_directory_size(const char *path);
 
 
 #endif
