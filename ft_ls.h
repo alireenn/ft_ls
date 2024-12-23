@@ -63,6 +63,8 @@ void	display_permissions(mode_t mode, const char *full_path);
 void	get_folder_paths(const char *path, char ***result, int *count, bool flagA);
 void	my_qsort(void *base, size_t nitems, size_t size, int (*compar)(const void *, const void *));
 size_t get_directory_size(const char *path);
+void	reverseList(t_output **head);
+void	sortListByTime(t_output **head, const char *path);
 
 
 #endif

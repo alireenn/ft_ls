@@ -91,7 +91,8 @@ void list_directory(const char *path, t_flag flags) {
 		return;
 	}
 
-	printf("total: %ld\n", get_directory_blocks(path, flags) );
+	if(flags.l)
+		printf("total: %ld\n", get_directory_blocks(path, flags) );
 	struct dirent *entry;
 	t_output *output = NULL; // Inizializza la lista concatenata come vuota
 
@@ -100,7 +101,13 @@ void list_directory(const char *path, t_flag flags) {
 		addToList(entry, flags, &output);
 	}
 	sortListAlphabetically(&output);
-	//if (flags.r)
+	
+	if (flags.r)
+		reverseList(&output);
+	
+	if (flags.t)
+		sortListByTime(&output, path);
+	
 	while (output != NULL) {
 		if (!flags.a && output->entry->d_name[0] == '.')
 		{
@@ -115,12 +122,12 @@ void list_directory(const char *path, t_flag flags) {
 			else {
 				if (flags.R)
 					printf("\t");
-				printf("%s\n", output->entry->d_name);
+				printf("%s   ", output->entry->d_name);
 			}
 			output = output->next;
 		}
 	}
-
+	printf("\n");
 	closedir(dir);
 	// Elaborazione della lista concatenata
 	t_output *current = output;
@@ -143,13 +150,29 @@ int main(int argc, char *argv[]) {
 
 	flagset(&flags);
 	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "-a") == 0) {
-			flags.a = 1;
-		} else if (strcmp(argv[i], "-l") == 0) {
-			flags.l = 1;
-		} else if (strcmp(argv[i], "-R") == 0) {
-			flags.R = 1;
-			get_folder_paths(path, &folders, &folder_count, flags.a);
+		if (argv[i][0] == '-') {
+			for (int j = 1; argv[i][j]; j++) {
+				if (argv[i][j] == 'l')
+					flags.l = 1;
+				else if (argv[i][j] == 'a')
+					flags.a = 1;
+				else if (argv[i][j] == 'R')
+					flags.R = 1;
+				else if (argv[i][j] == 't')
+					{
+						flags.t = 1;
+						flags.r = 0;
+					}
+				else if (argv[i][j] == 'r')
+					{
+						flags.r = 1;
+						flags.t = 0;
+					}
+				else {
+					fprintf(stderr, "Usage: %s [-lartR] [file ...]\n", argv[0]);
+					exit(EXIT_FAILURE);
+				}
+			}
 		} else {
 			path = argv[i];
 		}

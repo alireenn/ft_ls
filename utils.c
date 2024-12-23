@@ -247,3 +247,79 @@ void flagset(t_flag *flags)
 	flags->r = false;
 	flags->t = false;
 }
+
+void	reverseList(t_output **head)
+{
+	t_output *prev = NULL;
+	t_output *current = *head;
+	t_output *next = NULL;
+
+	while (current != NULL) {
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+	*head = prev;
+}
+
+void sortListByTime(t_output **head, const char *path)
+{
+    t_output *current = *head;
+    t_output *newList = NULL;
+
+    while (current != NULL) {
+        t_output *next = current->next;
+        char current_path[PATH_MAX];
+        snprintf(current_path, sizeof(current_path), "%s/%s", path, current->entry->d_name);
+
+        struct stat current_stat;
+        if (lstat(current_path, &current_stat) == -1) {
+            perror("lstat");
+            current = next;
+            continue;
+        }
+
+        if (newList == NULL) {
+            // Initialize the sorted list with the first element
+            newList = current;
+            newList->next = NULL;
+        } else {
+            t_output *tmp = newList;
+            t_output *prev = NULL;
+
+            while (tmp != NULL) {
+                char tmp_path[PATH_MAX];
+                snprintf(tmp_path, sizeof(tmp_path), "%s/%s", path, tmp->entry->d_name);
+
+                struct stat tmp_stat;
+                if (lstat(tmp_path, &tmp_stat) == -1) {
+                    perror("lstat");
+                    break;
+                }
+
+                // Order by descending modification time
+                if (current_stat.st_mtime > tmp_stat.st_mtime) {
+                    break;
+                }
+
+                prev = tmp;
+                tmp = tmp->next;
+            }
+
+            if (prev == NULL) {
+                // Insert at the beginning
+                current->next = newList;
+                newList = current;
+            } else {
+                // Insert in the middle or at the end
+                prev->next = current;
+                current->next = tmp;
+            }
+        }
+
+        current = next;
+    }
+
+    *head = newList;
+}
