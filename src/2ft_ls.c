@@ -170,7 +170,14 @@ int main(int argc, char *argv[]) {
 	if (flags.R)
 		ft_printf("\n");
 	
+	//funzione order folders in ordine alfabetico
+	
 	if (flags.R == 1) {
+		if (flags.r)
+			// Ordina le cartelle in ordine alfabetico inverso
+		if (flags.t)
+			// Ordina le cartelle per tempo di modifica
+		
 		for (int i = 0; i < folder_count; i++) {
 			if (!flags.a && (folders[i][0] == '.' && folders[i][1] == '/' && folders[i][2] == '.'))
 			{
