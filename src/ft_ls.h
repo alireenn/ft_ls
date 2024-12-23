@@ -46,11 +46,12 @@ void	error(DIR *dir);
 void	freeList(t_output *head);
 void	flagset(t_flag *flags) ;
 void	printList(t_output *head);
-void ft_printf(const char *format, ...) ;
-void ft_puthex(unsigned int n);
-void ft_putnbr(int n);
-void ft_putstr(char *str);
-void ft_putchar(char c);
+void 	ft_printf(const char *format, ...) ;
+void	ft_puthex(unsigned int n);
+void	ft_putnbr(int n);
+void	ft_putstr(char *str);
+void	ft_putchar(char c);
+int		ft_strcmp(const char *s1, const char *s2);
 void	sortListAlphabetically(t_output **head);
 void	display_permissions(mode_t mode, const char *full_path);
 void	get_folder_paths(const char *path, char ***result, int *count, bool flagA);
@@ -58,8 +59,9 @@ void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, cons
 void	reverseList(t_output **head);
 void	sortListByTime(t_output **head, const char *path);
 char	*ft_strdup(const char *s1);
-int	get_directory_blocks(const char *path, t_flag flags);
-int	get_directory_size(const char *path);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
+int		get_directory_blocks(const char *path, t_flag flags);
+int		get_directory_size(const char *path);
 
 
 #endif

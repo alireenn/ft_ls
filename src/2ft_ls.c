@@ -61,7 +61,7 @@ void addToList(struct dirent *entry, t_output **output) {
         exit(EXIT_FAILURE);
     }
 
-    memcpy(new_node->entry, entry, sizeof(struct dirent));
+    ft_memcpy(new_node->entry, entry, sizeof(struct dirent));
     new_node->next = NULL;
 
     if (*output == NULL) {
@@ -169,9 +169,6 @@ int main(int argc, char *argv[]) {
 	list_directory(path, flags);
 	if (flags.R)
 		ft_printf("\n");
-	
-	//funzione order folders in ordine alfabetico
-//	sort_paths_alphabetically(folders, folder_count);
 	
 	if (flags.R == 1) {
 		if (flags.r)

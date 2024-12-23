@@ -2,6 +2,8 @@
 
 #define PATH_SIZE 1024
 
+
+
 // Funzione ricorsiva per raccogliere i percorsi di cartelle e sottocartelle
 void get_folder_paths(const char *path, char ***result, int *count, bool flagA) {
 	struct dirent *entry;
@@ -16,12 +18,12 @@ void get_folder_paths(const char *path, char ***result, int *count, bool flagA) 
 	while ((entry = readdir(dp))) {
 		if (entry->d_type == DT_DIR) {
 			// Evitiamo di includere punti speciali "." e ".."
-			if (strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0) {
+			if (ft_strcmp(entry->d_name, ".") != 0 && ft_strcmp(entry->d_name, "..") != 0) {
 				// Costruiamo il percorso completo
 				char new_path[PATH_SIZE];
 				ft_snprintf(new_path, sizeof(new_path), "%s/%s", path, entry->d_name);
 				(*result) = realloc(*result, sizeof(char *) * (++(*count)));
-				(*result)[*count - 1] = strdup(new_path);
+				(*result)[*count - 1] = ft_strdup(new_path);
 				get_folder_paths(new_path, result, count, flagA); // Ricorsivamente esplora la sottocartella
 			}
 		}
@@ -82,7 +84,7 @@ int get_directory_size(const char *path) {
 
 	while ((entry = readdir(dir)) != NULL) {
 		// Escludi file nascosti se necessario (se non ci sono opzioni specifiche)
-		if ((strcmp(entry->d_name, ".") == 0) || strcmp(entry->d_name, "..") == 0) {
+		if ((ft_strcmp(entry->d_name, ".") == 0) || ft_strcmp(entry->d_name, "..") == 0) {
 			continue;
 		}
 		char full_path[PATH_MAX];
@@ -105,6 +107,23 @@ int get_directory_size(const char *path) {
 
 	closedir(dir);
 	return total_size;
+}
+
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	size_t			i;
+	unsigned char	*s11;
+	unsigned char	*s22;
+
+	s11 = (unsigned char *)s1;
+	s22 = (unsigned char *)s2;
+	i = 0;
+	while ((s11[i] == s22[i] && s11[i] != '\0' && s22[i] != '\0'))
+	{
+		i++;
+	}
+	return (s11[i] - s22[i]);
 }
 
 void display_permissions(mode_t mode, const char *full_path) {
@@ -153,7 +172,7 @@ int compare_int(const void *a, const void *b) {
 int compare_paths(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-    return strcmp(path1, path2);
+    return ft_strcmp(path1, path2);
 }
 
 
@@ -167,9 +186,9 @@ void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, cons
 			if (compar(elem_i, elem_j) > 0) {
 				// Scambia gli elementi
 				char temp[size];
-				memcpy(temp, elem_i, size);
-				memcpy(elem_i, elem_j, size);
-				memcpy(elem_j, temp, size);
+				ft_memcpy(temp, elem_i, size);
+				ft_memcpy(elem_i, elem_j, size);
+				ft_memcpy(elem_j, temp, size);
 			}
 		}
 	}
@@ -186,7 +205,7 @@ void sort_paths_alphabetically(char **paths, int count) {
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-    return strcmp(path2, path1);
+    return ft_strcmp(path2, path1);
 }
 
 
@@ -209,7 +228,7 @@ void sortListAlphabetically(t_output **head) {
 		ptr1 = *head;
 
 		while (ptr1->next != lptr) {
-			if (strcmp(ptr1->entry->d_name, ptr1->next->entry->d_name) > 0) {
+			if (ft_strcmp(ptr1->entry->d_name, ptr1->next->entry->d_name) > 0) {
 				// Scambia i nodi
 				struct dirent *temp = ptr1->entry;
 				ptr1->entry = ptr1->next->entry;
@@ -280,10 +299,22 @@ void	reverseList(t_output **head)
 	*head = prev;
 }
 
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char		*d;
+	const char	*s;
+
+	d = dst;
+	s = src;
+	while (n--)
+		*d++ = *s++;
+	return (dst);
+}
+
 int ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2) {
-    int format_len = strlen(format);
-    int str1_len = strlen(str1);
-    int str2_len = strlen(str2);
+    int format_len = ft_strlen(format);
+    int str1_len = ft_strlen(str1);
+    int str2_len = ft_strlen(str2);
     int required_size = format_len + str1_len + str2_len - 2; // '%s/%s' sostituisce due '%s'
     
     // Verifica se il buffer è abbastanza grande
@@ -304,8 +335,8 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
     for (const char *p = format; *p; ++p) {
         if (*p == '%' && *(p + 1) == 's') {
             const char *replacement = ptr == temp ? str1 : str2; // Prima sostituzione con str1, poi str2
-            int len = strlen(replacement);
-            memcpy(ptr, replacement, len);
+            int len = ft_strlen(replacement);
+            ft_memcpy(ptr, replacement, len);
             ptr += len;
             p++; // Salta 's' di '%s'
         } else {
@@ -315,7 +346,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
     *ptr = '\0'; // Termina con '\0'
 
     // Copia il risultato nel buffer
-    memcpy(buffer, temp, required_size + 1);
+    ft_memcpy(buffer, temp, required_size + 1);
     free(temp);
 
     return required_size; // Restituisce la dimensione della stringa generata
