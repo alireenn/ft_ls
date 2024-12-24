@@ -144,6 +144,8 @@ int main(int argc, char *argv[]) {
 				{
 					flags.R = 1;
 					get_folder_paths(path, &folders, &folder_count, flags.a);
+					sort_paths_alphabetically(folders, folder_count);
+					
 				}
 				else if (argv[i][j] == 't')
 					{
