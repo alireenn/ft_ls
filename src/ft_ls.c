@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 	{
 		init_path_list(&result);
 		get_sorted_folders(path, &result);
-		freeMat(folders);
+		//freeMat(folders);
 		folders = result.paths;
 		folder_count = result.count;
 	}
