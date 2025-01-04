@@ -6,6 +6,62 @@
 #include "ft_ls.h"
 
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <string.h>
+
+int ft_scandir(const char *dir_name, struct dirent ***namelist) {
+    DIR *dir;
+    struct dirent *entry;
+    struct dirent **list = NULL;
+    size_t count = 0;
+
+    // Apertura della directory
+    dir = opendir(dir_name);
+    if (dir == NULL) {
+        perror("opendir");
+        return -1;
+    }
+
+    // Scansione della directory
+    while ((entry = readdir(dir)) != NULL) {
+
+        // Allocazione dinamica per l'array namelist
+        list = realloc(list, (count + 1) * sizeof(struct dirent *));
+        if (list == NULL) {
+            perror("realloc");
+            closedir(dir);
+            return -1;
+        }
+
+        // Allocazione per il nuovo elemento dell'array
+        list[count] = malloc(sizeof(struct dirent));
+        if (list[count] == NULL) {
+            perror("malloc");
+            closedir(dir);
+            return -1;
+        }
+
+        // Copia i dati della voce della directory
+        memcpy(list[count], entry, sizeof(struct dirent));
+        count++;
+    }
+
+    // Assegna l'array a namelist
+    *namelist = list;
+
+
+    // Chiudi la directory
+    closedir(dir);
+
+    return count;  // Restituisce il numero di voci trovate
+}
+
+
 
 // Inizializza una struttura PathList
 void init_path_list(PathList *list) {
@@ -59,7 +115,7 @@ void get_sorted_folders(const char *path, PathList *result) {
     int n;
 
     // Leggi il contenuto della directory
-    n = scandir(path, &namelist, NULL, NULL);
+    n = ft_scandir(path, &namelist);
     if (n < 0) {
         perror("Errore nella lettura della directory");
         return;
