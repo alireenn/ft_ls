@@ -148,9 +148,9 @@ int main(int argc, char *argv[]) {
 		folder_count = result.count;
 
 	}
-	{	
-		sort_paths_by_time(folders, folder_count);
-	}
+	//{	
+	//	sort_paths_by_time(folders, folder_count);
+	//}
 	if (flags.R)
 		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
