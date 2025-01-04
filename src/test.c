@@ -105,7 +105,7 @@ static int compare_paths_by_time(const void *a, const void *b) {
         return 1;
     } else {
         // Ordina alfabeticamente in caso di timestamp uguali
-        return strcmp(path1, path2);
+        return strlowcmp(path1, path2);
     }
 }
 

@@ -122,7 +122,6 @@ int get_directory_size(const char *path) {
 	return total_size;
 }
 
-
 int	ft_strlowcmp(const char *s1, const char *s2)
 {
 	size_t			i;
