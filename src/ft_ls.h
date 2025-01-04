@@ -51,32 +51,36 @@ typedef struct s_PathList{
 void 	sort_paths_by_time(char **paths, int count);
 void 	sort_paths_alphabetically(char **paths, int count);
 void	sort_paths_reverse(char **paths, int count);
+void	sortListByTime(t_output **head, const char *path);
+void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
+int		get_directory_blocks(const char *path, t_flag flags);
+int		get_directory_size(const char *path);
+int		ft_strlowcmp(const char *s1, const char *s2);
+int		ft_strlowncmp(const char *s1, const char *s2, size_t size);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strcmp(const char *s1, const char *s2);
 int		ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2);
 int		ft_strlen(const char *str);
 void	error(DIR *dir);
 void	freeList(t_output *head);
 void	flagset(t_flag *flags) ;
 void	printList(t_output *head);
+char	*formatTime(char *time);
 void 	ft_printf(const char *format, ...) ;
 void	ft_puthex(unsigned int n);
 void	ft_putnbr(int n);
 void	addToList(struct dirent *entry, t_output **output);
 void	ft_putstr(char *str);
+void	freeMat(char **mat);
 void	ft_putchar(char c);
 void	ft_tolower(char *str);
-int		ft_strcmp(const char *s1, const char *s2);
 void	sortListAlphabetically(t_output **head);
 void	display_permissions(mode_t mode, const char *full_path);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
 void	get_folder_paths(const char *path, char ***result, int *count, bool flagA);
-void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
 void	reverseList(t_output **head);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-void	sortListByTime(t_output **head, const char *path);
 char	*ft_strdup(const char *s1);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
-int		get_directory_blocks(const char *path, t_flag flags);
-int		get_directory_size(const char *path);
 
 
 // ----------------------

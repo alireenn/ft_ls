@@ -1,18 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
-#include <sys/stat.h>
 #include "ft_ls.h"
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <dirent.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
 
 int ft_scandir(const char *dir_name, struct dirent ***namelist) {
     DIR *dir;
@@ -95,7 +81,7 @@ static int compare_paths_by_time(const void *a, const void *b) {
 
     if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
         //perror("Errore nell'accedere ai file");
-        //exit(EXIT_FAILURE);
+        //exit(EXIT_FAILURE); //capire
    // printf("PATH1 -> %s\nPATH2 -> %s\n", path1, path2);
     }
     // Ordina per tempo (decrescente)
@@ -105,7 +91,7 @@ static int compare_paths_by_time(const void *a, const void *b) {
         return 1;
     } else {
         // Ordina alfabeticamente in caso di timestamp uguali
-        return strlowcmp(path1, path2);
+        return ft_strlowcmp(path1, path2);
     }
 }
 

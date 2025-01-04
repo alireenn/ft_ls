@@ -122,6 +122,27 @@ int get_directory_size(const char *path) {
 	return total_size;
 }
 
+int	ft_strlowncmp(const char *s1, const char *s2, size_t size)
+{
+	size_t			i;
+	char	*s11;
+	char	*s22;
+
+	s11 = ft_strdup(s1);
+	s22 = ft_strdup(s2);
+	i = 0;
+	ft_tolower(s11);
+	ft_tolower(s22);
+	while ((s11[i] == s22[i] && s11[i] != '\0' && s22[i] != '\0') && i <= size)
+	{
+		i++;
+	}
+	int x = s11[i] - s22[i];
+	free(s11);
+	free(s22);
+	return (x);
+}
+
 int	ft_strlowcmp(const char *s1, const char *s2)
 {
 	size_t			i;
@@ -141,6 +162,35 @@ int	ft_strlowcmp(const char *s1, const char *s2)
 	free(s11);
 	free(s22);
 	return (x);
+}
+
+char *formatTime(char *time)
+{
+	int i;
+	int j = 0;
+	char *ret;
+
+	ret = malloc(sizeof(char) * 17);
+	for(i = 0; i < ft_strlen(time); i++)
+	{
+		if ((i >= 0 && i <= 3) || (i >= 16 && i <= ft_strlen(time)))
+			continue ;
+		ret[j] = time[i];
+		j++;
+	}
+	ret[j] = '\0';
+	return(ret);
+}
+
+void freeMat(char **mat)
+{
+	int i = 0;
+	while(mat[i])
+	{
+		free (mat[i]);
+		i++;
+	}
+	free (mat);
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -311,7 +361,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-	if (!ft_strncmp(path1, path2, ft_strlen(path1)) || !ft_strncmp(path2, path1, ft_strlen(path2)))
+	if (!ft_strlowncmp(path1, path2, ft_strlen(path1)) || !ft_strlowncmp(path2, path1, ft_strlen(path2)))
 		return 0;
     return ft_strcmp(path2, path1);
 }
