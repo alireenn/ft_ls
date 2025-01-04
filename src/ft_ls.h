@@ -65,7 +65,7 @@ void	reverseList(t_output **head);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	sortListByTime(t_output **head, const char *path);
 char	*ft_strdup(const char *s1);
-void	*ft_memcpy_memcpy(void *dst, const void *src, size_t n);
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 int		get_directory_blocks(const char *path, t_flag flags);
 int		get_directory_size(const char *path);
 

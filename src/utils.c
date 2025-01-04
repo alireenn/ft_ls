@@ -385,18 +385,6 @@ void	reverseList(t_output **head)
 	*head = prev;
 }
 
-void	*ft_memcpy_memcpy(void *dst, const void *src, size_t n)
-{
-	char		*d;
-	const char	*s;
-
-	d = dst;
-	s = src;
-	while (n--)
-		*d++ = *s++;
-	return (dst);
-}
-
 int ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2) {
     int format_len = ft_strlen(format);
     int str1_len = ft_strlen(str1);
@@ -420,7 +408,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
         if (*p == '%' && *(p + 1) == 's') {
             const char *replacement = ptr == temp ? str1 : str2;
             int len = ft_strlen(replacement);
-            ft_memcpy_memcpy(ptr, replacement, len);
+            ft_memcpy(ptr, replacement, len);
             ptr += len;
             p++;
         } else {
@@ -428,7 +416,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
         }
     }
     *ptr = '\0';
-    ft_memcpy_memcpy(buffer, temp, required_size + 1);
+    ft_memcpy(buffer, temp, required_size + 1);
     free(temp);
 
     return required_size;

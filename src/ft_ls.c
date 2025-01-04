@@ -25,7 +25,7 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	char time_buf[20];
 	strftime(time_buf, sizeof(time_buf), "%b %d %H:%M", localtime(&file_stat.st_mtime));
 	//TODO fix time format
-	ft_printf("%s ", ctime(&file_stat.st_mtime));
+	ft_printf(" %s ", ctime(&file_stat.st_mtime));
 
 	// Nome del file
 	ft_printf("%s", entry->d_name);
@@ -41,7 +41,7 @@ void display_file_details(const char *path, const struct dirent *entry) {
 		}
 	}
 
-	ft_printf("\n");
+		ft_printf("\n");
 }
 
 
@@ -78,7 +78,7 @@ void list_directory(const char *path,t_flag flags) {
 				display_file_details(path, output->entry);
 			}
 			else {
-				ft_printf("%s   ", output->entry->d_name);
+				ft_printf("%s  ", output->entry->d_name);
 			}
 			output = output->next;
 		}
