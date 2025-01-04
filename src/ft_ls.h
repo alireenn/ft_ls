@@ -38,6 +38,14 @@ typedef struct s_flag {
 	bool r;
 } t_flag;
 
+
+// Struttura per contenere i percorsi
+typedef struct {
+    char **paths;
+    size_t count;
+    size_t capacity;
+} PathList;
+
 //-----------------------
 
 void 	sort_paths_by_time(char **paths, int count);
@@ -69,6 +77,10 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 int		get_directory_blocks(const char *path, t_flag flags);
 int		get_directory_size(const char *path);
 
+
+// ----------------------
+void get_sorted_folders(const char *path, PathList *result);
+void init_path_list(PathList *list);
 
 #endif
 

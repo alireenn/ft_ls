@@ -53,3 +53,4 @@ dkms.conf
 ft_ls
 .gitignore
 ft_ls
+.vscode/settings.json

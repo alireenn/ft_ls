@@ -137,7 +137,17 @@ int main(int argc, char *argv[]) {
 	}
 	if (flags.r)
 		sort_paths_reverse(folders, folder_count);
-	if (flags.t)
+
+	PathList result;
+	if (flags.t && flags.R)
+	{
+		init_path_list(&result);
+		get_sorted_folders(path, &result);
+		
+		folders = result.paths;
+		folder_count = result.count;
+
+	}
 	{	
 		sort_paths_by_time(folders, folder_count);
 	}
