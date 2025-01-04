@@ -45,36 +45,6 @@ void display_file_details(const char *path, const struct dirent *entry) {
 }
 
 
-void addToList(struct dirent *entry, t_output **output) {
-    t_output *new_node = malloc(sizeof(t_output));
-    if (!new_node) {
-        perror("malloc");
-        freeList(*output);
-        exit(EXIT_FAILURE);
-    }
-    
-    new_node->entry = malloc(sizeof(struct dirent));
-    if (!new_node->entry) {
-        perror("malloc");
-        free(new_node);
-        freeList(*output);
-        exit(EXIT_FAILURE);
-    }
-
-    ft_memcpy(new_node->entry, entry, sizeof(struct dirent));
-    new_node->next = NULL;
-
-    if (*output == NULL) {
-        *output = new_node;
-    } else {
-        t_output *current = *output;
-        while (current->next != NULL) {
-            current = current->next;
-        }
-        current->next = new_node;
-    }
-}
-
 void list_directory(const char *path,t_flag flags) {
 	DIR *dir = opendir(path);
 	if (!dir) {
@@ -91,7 +61,6 @@ void list_directory(const char *path,t_flag flags) {
 		addToList(entry, &output);
 	}
 
-		
 	sortListAlphabetically(&output);
 	if (flags.r)
 		reverseList(&output);

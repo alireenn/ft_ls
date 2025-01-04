@@ -58,6 +58,37 @@ int get_directory_blocks(const char *path, t_flag flags) {
 }
 
 
+
+void addToList(struct dirent *entry, t_output **output) {
+    t_output *new_node = malloc(sizeof(t_output));
+    if (!new_node) {
+        perror("malloc");
+        freeList(*output);
+        exit(EXIT_FAILURE);
+    }
+    
+    new_node->entry = malloc(sizeof(struct dirent));
+    if (!new_node->entry) {
+        perror("malloc");
+        free(new_node);
+        freeList(*output);
+        exit(EXIT_FAILURE);
+    }
+
+    ft_memcpy(new_node->entry, entry, sizeof(struct dirent));
+    new_node->next = NULL;
+
+    if (*output == NULL) {
+        *output = new_node;
+    } else {
+        t_output *current = *output;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = new_node;
+    }
+}
+
 int get_directory_size(const char *path) {
 	struct stat file_stat;
 	struct dirent *entry;
@@ -156,11 +187,23 @@ int compare_paths(const void *a, const void *b) {
 }
 
 
+void	*ft_memcpy(void *dst, const void *src, size_t n)
+{
+	char		*d;
+	const char	*s;
+
+	d = dst;
+	s = src;
+	while (n--)
+		*d++ = *s++;
+	return (dst);
+}
+
 //funzione per il partizionamento dell'array
 int partition(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
     char *arr = (char *)base;
     char pivot[size];
-    memcpy(pivot, arr + high * size, size); // Il pivot è l'elemento finale
+    ft_memcpy(pivot, arr + high * size, size); // Il pivot è l'elemento finale
     int i = low - 1;
 
     for (int j = low; j < high; j++) {
@@ -168,17 +211,17 @@ int partition(void *base, int low, int high, int size, int (*compar)(const void 
             i++;
             // Scambia arr[i] e arr[j]
             char temp[size];
-            memcpy(temp, arr + i * size, size);
-            memcpy(arr + i * size, arr + j * size, size);
-            memcpy(arr + j * size, temp, size);
+            ft_memcpy(temp, arr + i * size, size);
+            ft_memcpy(arr + i * size, arr + j * size, size);
+            ft_memcpy(arr + j * size, temp, size);
         }
     }
 
     // Posiziona il pivot al posto giusto
     char temp[size];
-    memcpy(temp, arr + (i + 1) * size, size);
-    memcpy(arr + (i + 1) * size, arr + high * size, size);
-    memcpy(arr + high * size, temp, size);
+    ft_memcpy(temp, arr + (i + 1) * size, size);
+    ft_memcpy(arr + (i + 1) * size, arr + high * size, size);
+    ft_memcpy(arr + high * size, temp, size);
 
     return i + 1; // Restituisce l'indice del pivot
 }
@@ -225,12 +268,31 @@ void sort_paths_alphabetically(char **paths, int count) {
     ft_qsort(paths, count, sizeof(char *), compare_paths);
 }
 
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t			i;
+	unsigned char	*s11;
+	unsigned char	*s22;
+
+	s11 = (unsigned char *)s1;
+	s22 = (unsigned char *)s2;
+	i = 0;
+	if (n == 0)
+		return (0);
+	while ((s11[i] == s22[i] && s11[i] != '\0') && ((i + 1) < n))
+	{
+		i++;
+	}
+	return (s11[i] - s22[i]);
+}
+
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-	if (!strncmp(path1, path2, ft_strlen(path1)) || !strncmp(path2, path1, ft_strlen(path2)))
+	if (!ft_strncmp(path1, path2, ft_strlen(path1)) || !ft_strncmp(path2, path1, ft_strlen(path2)))
 		return 0;
-    return strcmp(path2, path1);
+    return ft_strcmp(path2, path1);
 }
 
 void sort_paths_reverse(char **paths, int count) {
@@ -321,7 +383,7 @@ void	reverseList(t_output **head)
 	*head = prev;
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+void	*ft_memcpy_memcpy(void *dst, const void *src, size_t n)
 {
 	char		*d;
 	const char	*s;
@@ -356,7 +418,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
         if (*p == '%' && *(p + 1) == 's') {
             const char *replacement = ptr == temp ? str1 : str2;
             int len = ft_strlen(replacement);
-            ft_memcpy(ptr, replacement, len);
+            ft_memcpy_memcpy(ptr, replacement, len);
             ptr += len;
             p++;
         } else {
@@ -364,7 +426,7 @@ int ft_snprintf(char *buffer, int size, const char *format, const char *str1, co
         }
     }
     *ptr = '\0';
-    ft_memcpy(buffer, temp, required_size + 1);
+    ft_memcpy_memcpy(buffer, temp, required_size + 1);
     free(temp);
 
     return required_size;
