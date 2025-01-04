@@ -156,33 +156,33 @@ int compare_paths(const void *a, const void *b) {
 }
 
 
-
-// Funzione di partizione per QuickSort
+//funzione per il partizionamento dell'array
 int partition(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
     char *arr = (char *)base;
-    char *pivot = arr + high * size;
+    char pivot[size];
+    memcpy(pivot, arr + high * size, size); // Il pivot è l'elemento finale
     int i = low - 1;
 
     for (int j = low; j < high; j++) {
-        char *elem_j = arr + j * size;
-        if (compar(elem_j, pivot) < 0) {
+        if (compar(arr + j * size, pivot) <= 0) {
             i++;
-            // Scambio
+            // Scambia arr[i] e arr[j]
             char temp[size];
-            memcpy(temp, elem_j, size);
-            memcpy(elem_j, arr + i * size, size);
-            memcpy(arr + i * size, temp, size);
+            memcpy(temp, arr + i * size, size);
+            memcpy(arr + i * size, arr + j * size, size);
+            memcpy(arr + j * size, temp, size);
         }
     }
 
-    // Metti il pivot nella posizione corretta
+    // Posiziona il pivot al posto giusto
     char temp[size];
     memcpy(temp, arr + (i + 1) * size, size);
-    memcpy(arr + (i + 1) * size, pivot, size);
-    memcpy(pivot, temp, size);
+    memcpy(arr + (i + 1) * size, arr + high * size, size);
+    memcpy(arr + high * size, temp, size);
 
-    return i + 1;
+    return i + 1; // Restituisce l'indice del pivot
 }
+
 
 // Funzione QuickSort ricorsiva
 void quicksort(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
@@ -228,7 +228,9 @@ void sort_paths_alphabetically(char **paths, int count) {
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-    return ft_strcmp(path2, path1);
+	if (!strncmp(path1, path2, ft_strlen(path1)) || !strncmp(path2, path1, ft_strlen(path2)))
+		return 0;
+    return strcmp(path2, path1);
 }
 
 void sort_paths_reverse(char **paths, int count) {
