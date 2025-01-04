@@ -32,14 +32,14 @@ void free_path_list(PathList *list) {
 }
 
 // Funzione di confronto per ordinare i percorsi
-int compare_paths_by_time(const void *a, const void *b) {
+static int compare_paths_by_time(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
     struct stat stat1, stat2;
 
     if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
-        perror("Errore nell'accedere ai file");
-        exit(EXIT_FAILURE);
+        //perror("Errore nell'accedere ai file");
+        //exit(EXIT_FAILURE);
     }
 
     // Ordina per tempo (decrescente)
