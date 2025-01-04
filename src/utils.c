@@ -212,6 +212,8 @@ int compare_paths_by_time(const void *a, const void *b) {
     } else if (stat1.st_mtime < stat2.st_mtime) {
         return 1;
     } else {
+		if (!strncmp(path1, path2, ft_strlen(path1)) || !strncmp(path2, path1, ft_strlen(path2)))
+			return 0;
         return ft_strcmp(path1,path2);
     }
 }
