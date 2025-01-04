@@ -40,7 +40,7 @@ typedef struct s_flag {
 
 
 // Struttura per contenere i percorsi
-typedef struct {
+typedef struct s_PathList{
     char **paths;
     size_t count;
     size_t capacity;
@@ -63,6 +63,7 @@ void	ft_putnbr(int n);
 void	addToList(struct dirent *entry, t_output **output);
 void	ft_putstr(char *str);
 void	ft_putchar(char c);
+void	ft_tolower(char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 void	sortListAlphabetically(t_output **head);
 void	display_permissions(mode_t mode, const char *full_path);

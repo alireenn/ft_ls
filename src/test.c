@@ -96,8 +96,8 @@ static int compare_paths_by_time(const void *a, const void *b) {
     if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
         //perror("Errore nell'accedere ai file");
         //exit(EXIT_FAILURE);
+   // printf("PATH1 -> %s\nPATH2 -> %s\n", path1, path2);
     }
-
     // Ordina per tempo (decrescente)
     if (stat1.st_mtime > stat2.st_mtime) {
         return -1;

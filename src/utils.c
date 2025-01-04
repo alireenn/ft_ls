@@ -123,6 +123,27 @@ int get_directory_size(const char *path) {
 }
 
 
+int	ft_strlowcmp(const char *s1, const char *s2)
+{
+	size_t			i;
+	char	*s11;
+	char	*s22;
+
+	s11 = ft_strdup(s1);
+	s22 = ft_strdup(s2);
+	i = 0;
+	ft_tolower(s11);
+	ft_tolower(s22);
+	while ((s11[i] == s22[i] && s11[i] != '\0' && s22[i] != '\0'))
+	{
+		i++;
+	}
+	int x = s11[i] - s22[i];
+	free(s11);
+	free(s22);
+	return (x);
+}
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t			i;
@@ -183,7 +204,7 @@ int compare_int(const void *a, const void *b) {
 int compare_paths(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-    return ft_strcmp(path1, path2);
+    return ft_strcmp(path1, path2); // capire
 }
 
 
@@ -314,7 +335,7 @@ void sortListAlphabetically(t_output **head) {
 		ptr1 = *head;
 
 		while (ptr1->next != lptr) {
-			if (ft_strcmp(ptr1->entry->d_name, ptr1->next->entry->d_name) > 0) {
+			if (ft_strlowcmp(ptr1->entry->d_name, ptr1->next->entry->d_name) > 0) {
 				struct dirent *temp = ptr1->entry;
 				ptr1->entry = ptr1->next->entry;
 				ptr1->next->entry = temp;
@@ -367,6 +388,13 @@ void flagset(t_flag *flags)
 	flags->R = false;
 	flags->r = false;
 	flags->t = false;
+}
+
+void	ft_tolower(char *str)
+{
+	for (int i = 0; i  < ft_strlen(str); i++)
+	if (str[i] >= 'A' && str[i] <= 'Z')
+			str[i] = str[i] + ('a' - 'A');
 }
 
 void	reverseList(t_output **head)
