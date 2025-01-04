@@ -1,5 +1,14 @@
 #include "ft_ls.h"
 
+void * ft_realloc(void *ptr, size_t size) {
+    void *new_ptr = ft_realloc(ptr, size);
+    if (new_ptr == NULL) {
+        perror("ft_realloc");
+        exit(EXIT_FAILURE);
+    }
+    return new_ptr;
+}
+
 int ft_scandir(const char *dir_name, struct dirent ***namelist) {
     DIR *dir;
     struct dirent *entry;
@@ -17,9 +26,9 @@ int ft_scandir(const char *dir_name, struct dirent ***namelist) {
     while ((entry = readdir(dir)) != NULL) {
 
         // Allocazione dinamica per l'array namelist
-        list = realloc(list, (count + 1) * sizeof(struct dirent *));
+        list = ft_realloc(list, (count + 1) * sizeof(struct dirent *));
         if (list == NULL) {
-            perror("realloc");
+            perror("ft_realloc");
             closedir(dir);
             return -1;
         }
@@ -33,7 +42,7 @@ int ft_scandir(const char *dir_name, struct dirent ***namelist) {
         }
 
         // Copia i dati della voce della directory
-        memcpy(list[count], entry, sizeof(struct dirent));
+        ft_memcpy(list[count], entry, sizeof(struct dirent));
         count++;
     }
 
@@ -60,7 +69,7 @@ void init_path_list(PathList *list) {
 void add_to_path_list(PathList *list, const char *path) {
     if (list->count >= list->capacity) {
         list->capacity *= 2;
-        list->paths = realloc(list->paths, list->capacity * sizeof(char *));
+        list->paths = ft_realloc(list->paths, list->capacity * sizeof(char *));
     }
     list->paths[list->count++] = strdup(path);
 }
@@ -125,7 +134,7 @@ void get_sorted_folders(const char *path, PathList *result) {
     free(namelist);
 
     // Ordina i percorsi per tempo e nome
-    qsort(sub_paths, sub_count, sizeof(char *), compare_paths_by_time);
+    ft_qsort(sub_paths, sub_count, sizeof(char *), compare_paths_by_time);
 
     // Processa le directory e aggiunge al risultato
     for (int i = 0; i < sub_count; i++) {

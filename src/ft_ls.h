@@ -81,6 +81,8 @@ void	reverseList(t_output **head);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 char	*ft_strdup(const char *s1);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
+void	*ft_realloc(void *ptr, size_t size);
+void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
 
 
 // ----------------------

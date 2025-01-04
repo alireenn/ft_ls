@@ -16,7 +16,7 @@ void get_folder_paths(const char *path, char ***result, int *count, bool flagA) 
 				// Costruiamo il percorso completo
 				char new_path[PATH_SIZE];
 				ft_snprintf(new_path, sizeof(new_path), "%s/%s", path, entry->d_name);
-				(*result) = realloc(*result, sizeof(char *) * (++(*count)));
+				(*result) = ft_realloc(*result, sizeof(char *) * (++(*count)));
 				(*result)[*count - 1] = ft_strdup(new_path);
 				get_folder_paths(new_path, result, count, flagA);
 			}

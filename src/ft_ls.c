@@ -145,11 +145,7 @@ int main(int argc, char *argv[]) {
 		freeMat(folders);
 		folders = result.paths;
 		folder_count = result.count;
-
 	}
-	//{	
-	//	sort_paths_by_time(folders, folder_count);
-	//}
 	if (flags.R)
 		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
@@ -159,9 +155,7 @@ int main(int argc, char *argv[]) {
 	if (flags.R == 1) {
 		for (int i = 0; i < folder_count; i++) {
 			if (!flags.a && (folders[i][0] == '.' && folders[i][1] == '/' && folders[i][2] == '.'))
-			{
 				free(folders[i]);
-			}
 			else {
                 ft_printf("%s:\n", folders[i]);
                 list_directory(folders[i], flags);
