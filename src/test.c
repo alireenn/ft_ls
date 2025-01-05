@@ -1,7 +1,81 @@
 #include "ft_ls.h"
 
 
+
 int ft_scandir(const char *dir_name, struct dirent ***namelist) {
+    DIR *dir;
+    struct dirent *entry;
+    struct dirent **list = NULL;
+    size_t count = 0;
+    size_t capacity = 10; // Capacità iniziale dell'array
+
+    // Allocazione iniziale dell'array
+    list = malloc(capacity * sizeof(struct dirent *));
+    if (list == NULL) {
+        perror("malloc");
+        return -1;
+    }
+
+    // Apertura della directory
+    dir = opendir(dir_name);
+    if (dir == NULL) {
+        perror("opendir");
+        free(list);
+        return -1;
+    }
+
+    // Scansione della directory
+    while ((entry = readdir(dir)) != NULL) {
+        // Verifica se l'array ha bisogno di più spazio
+        if (count >= capacity) {
+            // Aumenta la capacità
+            capacity *= 2;
+            struct dirent **new_list = malloc(capacity * sizeof(struct dirent *));
+            if (new_list == NULL) {
+                perror("malloc");
+                for (size_t i = 0; i < count; i++) {
+                    free(list[i]);
+                }
+                free(list);
+                closedir(dir);
+                return -1;
+            }
+
+            // Copia i dati dall'array vecchio a quello nuovo
+            ft_memcpy(new_list, list, count * sizeof(struct dirent *));
+            free(list); // Libera la memoria dell'array vecchio
+            list = new_list;
+        }
+
+        // Allocazione per il nuovo elemento dell'array
+        list[count] = malloc(sizeof(struct dirent));
+        if (list[count] == NULL) {
+            perror("malloc");
+            for (size_t i = 0; i < count; i++) {
+                free(list[i]);
+            }
+            free(list);
+            closedir(dir);
+            return -1;
+        }
+
+        // Copia i dati della voce della directory
+        memcpy(list[count], entry, sizeof(struct dirent));
+        count++;
+    }
+
+    // Assegna l'array a namelist
+    *namelist = list;
+
+    // Chiudi la directory
+    closedir(dir);
+
+    return count; // Restituisce il numero di voci trovate
+}
+
+//---------------------------------------------------------------------------------/////////////////////////////
+/*
+int _ft_scandir(const char *dir_name, struct dirent ***namelist) {  //FUNZIONE NON USATA ///////////////////////
     DIR *dir;
     struct dirent *entry;
     struct dirent **list = NULL;
@@ -17,8 +91,14 @@ int ft_scandir(const char *dir_name, struct dirent ***namelist) {
     // Scansione della directory
     while ((entry = readdir(dir)) != NULL) {
 
-        // Allocazione dinamica per l'array namelist
-        list = realloc(list, (count + 1) * sizeof(struct dirent *));
+        // Allocazione dinamica per l'array namelistvoid add_to_path_list(PathList *list, const char *path) {
+    if (list->count >= list->capacity) {
+        list->capacity *= 2;
+        list->paths = realloc(list->paths, list->capacity * sizeof(char *));
+    }
+    list->paths[list->count++] = strdup(path);
+}
+        list = realloc(list, (count + 1) * sizeof(struct dirent *)); 
         if (list == NULL) {
             perror("realloc");
             closedir(dir);
@@ -46,7 +126,7 @@ int ft_scandir(const char *dir_name, struct dirent ***namelist) {
     closedir(dir);
 
     return count;  // Restituisce il numero di voci trovate
-}
+}*/
 
 
 
@@ -73,6 +153,7 @@ void free_path_list(PathList *list) {
     }
     free(list->paths);
 }
+
 
 // Funzione di confronto per ordinare i percorsi
 static int compare_paths_by_time(const void *a, const void *b) {
@@ -107,6 +188,7 @@ void get_sorted_folders(const char *path, PathList *result) {
         perror("Errore nella lettura della directory");
         return;
     }
+
 
     // Array temporaneo per i percorsi completi
     char **sub_paths = malloc(n * sizeof(char *));

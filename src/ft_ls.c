@@ -12,14 +12,14 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	}
 
 	display_permissions(file_stat.st_mode, full_path);
-	ft_printf("%ld ", file_stat.st_nlink);
+	ft_printf("%d ", (int)file_stat.st_nlink);
 
 	struct passwd *pwd = getpwuid(file_stat.st_uid);
 	struct group *grp = getgrgid(file_stat.st_gid);
 	ft_printf("%s %s ", pwd ? pwd->pw_name : "?", grp ? grp->gr_name : "?");
 
 	// Dimensione del file
-	ft_printf("%d ", file_stat.st_size);
+	ft_printf("%d ", file_stat.st_size); //capire
 
 	// Tempo di modifica
 	char *time_buf;
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) {
 	{
 		init_path_list(&result);
 		get_sorted_folders(path, &result);
-		//freeMat(folders);
+		freeMat(folders, folder_count);
 		folders = result.paths;
 		folder_count = result.count;
 	}

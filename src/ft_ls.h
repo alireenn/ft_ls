@@ -53,6 +53,9 @@ void 	sort_paths_alphabetically(char **paths, int count);
 void	sort_paths_reverse(char **paths, int count);
 void	sortListByTime(t_output **head, const char *path);
 void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
+int		compare_paths(const void *a, const void *b);
+
+void	add_to_path_list(PathList *list, const char *path);
 int		get_directory_blocks(const char *path, t_flag flags);
 int		get_directory_size(const char *path);
 int		ft_strlowcmp(const char *s1, const char *s2);
@@ -71,7 +74,7 @@ void	ft_puthex(unsigned int n);
 void	ft_putnbr(int n);
 void	addToList(struct dirent *entry, t_output **output);
 void	ft_putstr(char *str);
-void	freeMat(char **mat);
+void	freeMat(char **mat, int count);
 void	ft_putchar(char c);
 void	ft_tolower(char *str);
 void	sortListAlphabetically(t_output **head);
@@ -82,7 +85,8 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 char	*ft_strdup(const char *s1);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_realloc(void *ptr, size_t size);
-void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
+void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
+void	*ft_memcpy(void *dst, const void *src, size_t n);
 
 
 // ----------------------
