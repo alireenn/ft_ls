@@ -201,7 +201,7 @@ void get_sorted_folders(const char *path, PathList *result) {
         }
 
         char *full_path = malloc(strlen(path) + strlen(namelist[i]->d_name) + 2);
-        sprintf(full_path, "%s/%s", path, namelist[i]->d_name);
+        ft_sprintf(full_path, "%s/%s", path, namelist[i]->d_name);
         sub_paths[sub_count++] = full_path;
         free(namelist[i]);
     }

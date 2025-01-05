@@ -1,45 +1,44 @@
 #include "ft_ls.h"
 
 
-//funzione per il partizionamento dell'array
-int partition(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
-    char *arr = (char *)base;
-    char pivot[size];
-    ft_memcpy(pivot, arr + high * size, size); // Il pivot è l'elemento finale
-    int i = low - 1;
 
-    for (int j = low; j < high; j++) {
-        if (compar(arr + j * size, pivot) <= 0) {
+// Funzione di scambio
+void swap(void *a, void *b, size_t size) {
+    char temp[size];
+    memcpy(temp, a, size);
+    memcpy(a, b, size);
+    memcpy(b, temp, size);
+}
+
+// Funzione principale ft_qsort
+void ft_qsort(void *base, size_t n_items, size_t item_size, int (*compare)(const void *, const void *)) {
+    if (n_items < 2) return; // Se ci sono meno di 2 elementi, non serve ordinare
+
+    char *array = (char *)base;
+
+    // Selezione del pivot (usa l'ultimo elemento)
+    char *pivot = array + (n_items - 1) * item_size;
+
+    size_t i = 0; // Indice dell'elemento minore
+
+    for (size_t j = 0; j < n_items - 1; ++j) {
+        char *current = array + j * item_size;
+
+        // Confronto con il pivot
+        if (compare(current, pivot) <= 0) {
+            char *smaller = array + i * item_size;
+            swap(smaller, current, item_size);
             i++;
-            // Scambia arr[i] e arr[j]
-            char temp[size];
-            ft_memcpy(temp, arr + i * size, size);
-            ft_memcpy(arr + i * size, arr + j * size, size);
-            ft_memcpy(arr + j * size, temp, size);
         }
     }
 
-    // Posiziona il pivot al posto giusto
-    char temp[size];
-    ft_memcpy(temp, arr + (i + 1) * size, size);
-    ft_memcpy(arr + (i + 1) * size, arr + high * size, size);
-    ft_memcpy(arr + high * size, temp, size);
+    // Posizionare il pivot nella posizione corretta
+    char *pivot_position = array + i * item_size;
+    swap(pivot_position, pivot, item_size);
 
-    return i + 1; // Restituisce l'indice del pivot
-}
-
-
-// Funzione QuickSort ricorsiva
-void quicksort(void *base, int low, int high, int size, int (*compar)(const void *, const void *)) {
-    if (low < high) {
-        int pi = partition(base, low, high, size, compar);
-        quicksort(base, low, pi - 1, size, compar);  // Ordinamento della parte sinistra
-        quicksort(base, pi + 1, high, size, compar); // Ordinamento della parte destra
-    }
-}
-
-void ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *)) {
-    quicksort(base, 0, nitems - 1, size, compar);
+    // Chiamate ricorsive per le due sottoliste
+    ft_qsort(array, i, item_size, compare);                         // Partizione sinistra
+    ft_qsort(pivot_position + item_size, n_items - i - 1, item_size, compare); // Partizione destra
 }
 
 int compare_paths_by_time(const void *a, const void *b) {
@@ -66,6 +65,23 @@ void sort_paths_by_time(char **paths, int count) {
 	ft_qsort(paths, count, sizeof(char *), compare_paths_by_time);
 }
 
+int compare_paths(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    // if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2)){   
+    //     if(ft_strlen(path1) < ft_strlen(path2))
+    //         return 0;
+    //     else
+    //         return -1;
+    // }       
+    char * aux1 = ft_strtrim(path1);
+    char * aux2 = ft_strtrim(path2);
+    int aux3 = ft_strlowcmp(aux1, aux2);
+    free(aux1);
+    free(aux2);
+    return aux3;
+}
+
 // Funzione per ordinare un vettore di path in ordine alfabetico
 void sort_paths_alphabetically(char **paths, int count) {
     ft_qsort(paths, count, sizeof(char *), compare_paths);
@@ -75,9 +91,17 @@ void sort_paths_alphabetically(char **paths, int count) {
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-	if (!ft_strlowncmp(path1, path2, ft_strlen(path1)) || !ft_strlowncmp(path2, path1, ft_strlen(path2)))
-		return 0;
-    return ft_strcmp(path2, path1);
+
+    if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2))
+        return 0;
+
+    char *tmp2 = ft_strtrim(path2);
+    char *tmp1 = ft_strtrim(path1);
+    int x = ft_strlowcmp(tmp2, tmp1); 
+    free(tmp1);
+    free(tmp2);
+    return x;
+
 }
 
 void sort_paths_reverse(char **paths, int count) {
@@ -98,13 +122,17 @@ void sortListAlphabetically(t_output **head) {
 		ptr1 = *head;
 
 		while (ptr1->next != lptr) {
-			if (ft_strlowcmp(ptr1->entry->d_name, ptr1->next->entry->d_name) > 0) {
+            char *tmp1 = ft_strtrim(ptr1->entry->d_name);
+            char *tmpnext = ft_strtrim(ptr1->next->entry->d_name);
+			if (ft_strlowcmp(tmp1, tmpnext) > 0) {
 				struct dirent *temp = ptr1->entry;
 				ptr1->entry = ptr1->next->entry;
 				ptr1->next->entry = temp;
 
 				swapped = true;
 			}
+            free(tmp1);
+            free(tmpnext);
 			ptr1 = ptr1->next;
 		}
 		lptr = ptr1;

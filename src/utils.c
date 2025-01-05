@@ -48,9 +48,9 @@ int get_directory_blocks(const char *path, t_flag flags) {
 			perror("lstat");
 			continue;
 		}
-		if (S_ISREG(file_stat.st_mode) || S_ISDIR(file_stat.st_mode)  || S_ISLNK(file_stat.st_mode)) {
+		//if (S_ISREG(file_stat.st_mode) || S_ISDIR(file_stat.st_mode)  || S_ISLNK(file_stat.st_mode)) {
 			total_blocks += file_stat.st_blocks;
-		}
+		//}
 	}
 
 	closedir(dir);

@@ -98,6 +98,111 @@ void freeMat(char **mat, int count)
 	free (mat);
 }
 
+void	*ft_memset(void *b, int c, size_t len)
+{
+	unsigned char	*ptr;
+
+	ptr = b;
+	while (len-- > 0)
+		*ptr++ = c;
+	return (b);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	ft_memset((void *) s, '\0', (size_t) n);
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*point;
+
+	point = malloc(count * size);
+	if (point == NULL)
+		return (NULL);
+	ft_bzero(point, count * size);
+	return (point);
+}
+
+char *ft_strcpy(char *dest, const char *src) {
+    char *dest_ptr = dest; // Salva l'inizio di dest per restituirlo
+
+    while (*src) { // Copia carattere per carattere finché non si incontra '\0'
+        *dest_ptr++ = *src++;
+    }
+
+    *dest_ptr = '\0'; // Aggiunge il terminatore null alla fine di dest
+
+    return dest; // Restituisce il puntatore alla stringa destinazione
+}
+
+int ft_sprintf(char *buffer, const char *format, ...) {
+    va_list args; // Lista di argomenti variabili
+    va_start(args, format);
+
+    char *buf_ptr = buffer; // Puntatore al buffer
+    const char *fmt_ptr = format; // Puntatore alla stringa di formato
+
+    while (*fmt_ptr) {
+        if (*fmt_ptr == '%') {
+            fmt_ptr++; // Salta il '%'
+
+            switch (*fmt_ptr) {
+                case 's': { // Gestione stringhe
+                    const char *str = va_arg(args, const char *);
+                    ft_strcpy(buf_ptr, str);
+                    buf_ptr += strlen(str);
+                    break;
+                }
+                case 'c': { // Gestione caratteri
+                    char c = (char)va_arg(args, int);
+                    *buf_ptr++ = c;
+                    break;
+                }
+                default: // Specificatore non riconosciuto
+                    *buf_ptr++ = '%';
+                    *buf_ptr++ = *fmt_ptr;
+                    break;
+            }
+        } else {
+            *buf_ptr++ = *fmt_ptr; // Copia normale dei caratteri
+        }
+        fmt_ptr++;
+    }
+
+    *buf_ptr = '\0'; // Terminazione della stringa
+    va_end(args);
+
+    return buf_ptr - buffer; // Numero di caratteri scritti
+}
+
+
+char	*ft_strtrim(char const *s1)
+{
+	size_t	i;
+	size_t	j;
+	char	*str;
+
+	i = 0;
+	j = 0;
+	while (s1[i]=='.' || s1[i]=='/' )
+		i++;
+	if (s1[i] == 0)
+	{
+		str = malloc(sizeof(char));
+		str[0] = 0;
+		return (str);
+	}
+	while (s1[j] != 0)
+		j++;
+	j--;
+	while (s1[j]=='.' || s1[j]=='/')
+		j--;
+	str = ft_calloc(j - i + 2, sizeof(char));
+	ft_memcpy(str, &s1[i], j - i + 1);
+	return (str);
+}
+
 int	ft_strcmp(const char *s1, const char *s2)
 {
 	size_t			i;
@@ -117,13 +222,6 @@ int	ft_strcmp(const char *s1, const char *s2)
 int compare_int(const void *a, const void *b) {
 	return (*(int *)a - *(int *)b);
 }
-
-int compare_paths(const void *a, const void *b) {
-    const char *path1 = *(const char **)a;
-    const char *path2 = *(const char **)b;
-    return ft_strcmp(path1, path2); // capire
-}
-
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -192,3 +290,4 @@ void	ft_tolower(char *str)
 	if (str[i] >= 'A' && str[i] <= 'Z')
 			str[i] = str[i] + ('a' - 'A');
 }
+

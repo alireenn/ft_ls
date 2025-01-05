@@ -1,3 +1,4 @@
+
 #include "ft_ls.h"
 
 void display_file_details(const char *path, const struct dirent *entry) {
@@ -61,11 +62,11 @@ void list_directory(const char *path,t_flag flags) {
 	}
 
 	sortListAlphabetically(&output);
-	if (flags.r)
-		reverseList(&output);
 	
 	if (flags.t)
 		sortListByTime(&output, path);
+	if (flags.r)
+		reverseList(&output);
 	
 	t_output *head = output;
 	while (output != NULL) {
@@ -82,7 +83,8 @@ void list_directory(const char *path,t_flag flags) {
 			output = output->next;
 		}
 	}
-	ft_printf("\n");
+	if (!flags.l)
+		ft_printf("\n");
 	closedir(dir);
 
 	while (head != NULL) {
@@ -103,41 +105,46 @@ int main(int argc, char *argv[]) {
 	flagset(&flags);
 	for (int i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
+			if(argv[i][1] == 0)
+			{
+				
+				fprintf(stderr, "Usage: %s [-lartR] [file ...]\n", argv[0]);
+				exit(EXIT_FAILURE);
+			}
 			for (int j = 1; argv[i][j]; j++) {
 				if (argv[i][j] == 'l')
 					flags.l = 1;
 				else if (argv[i][j] == 'a')
 					flags.a = 1;
 				else if (argv[i][j] == 'R')
+					flags.R = 1;					
+				else if (argv[i][j] == 'r')
 				{
-					flags.R = 1;
-					get_folder_paths(path, &folders, &folder_count, flags.a);
-					sort_paths_alphabetically(folders, folder_count);
-					
+					if (!flags.t)
+						flags.r = 1;
 				}
 				else if (argv[i][j] == 't')
-					{
-						flags.t = 1;
-						flags.r = 0;
-					}
-				else if (argv[i][j] == 'r')
-					{
-						flags.r = 1;
-						flags.t = 0;
-					}
+				{ 
+					flags.t = 1;
+					flags.r = 0;
+				}
 				else {
 					fprintf(stderr, "Usage: %s [-lartR] [file ...]\n", argv[0]);
 					exit(EXIT_FAILURE);
 				}
 			}
-		} else {
+		}
+		else{
 			path = argv[i];
 		}
 	}
-	if (flags.r)
-		sort_paths_reverse(folders, folder_count);
 
 	PathList result;
+	if (flags.R)
+	{
+		get_folder_paths(path, &folders, &folder_count, flags.a);
+		sort_paths_alphabetically(folders, folder_count);
+	}
 	if (flags.t && flags.R)
 	{
 		init_path_list(&result);
@@ -146,10 +153,16 @@ int main(int argc, char *argv[]) {
 		folders = result.paths;
 		folder_count = result.count;
 	}
+	
+	if (flags.r)
+	{
+		printf("cazzo\n");
+		sort_paths_reverse(folders, folder_count);
+	}
 	if (flags.R)
 		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
-	if (flags.R)
+	if (flags.R && !flags.l)
 		ft_printf("\n");
 	
 	if (flags.R == 1) {

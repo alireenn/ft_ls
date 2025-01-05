@@ -1,3 +1,5 @@
+
+
 #ifndef FT_LS
 #define FT_LS
 // ----------------------
@@ -52,15 +54,17 @@ void 	sort_paths_by_time(char **paths, int count);
 void 	sort_paths_alphabetically(char **paths, int count);
 void	sort_paths_reverse(char **paths, int count);
 void	sortListByTime(t_output **head, const char *path);
-void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
 int		compare_paths(const void *a, const void *b);
 
 void	add_to_path_list(PathList *list, const char *path);
+char	*ft_strcpy(char *dest, const char *src);
 int		get_directory_blocks(const char *path, t_flag flags);
 int		get_directory_size(const char *path);
+int		ft_sprintf(char *buffer, const char *format, ...);
 int		ft_strlowcmp(const char *s1, const char *s2);
 int		ft_strlowncmp(const char *s1, const char *s2, size_t size);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+char	*ft_strtrim(char const *s1);
 int		ft_strcmp(const char *s1, const char *s2);
 int		ft_snprintf(char *buffer, int size, const char *format, const char *str1, const char *str2);
 int		ft_strlen(const char *str);
@@ -85,7 +89,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 char	*ft_strdup(const char *s1);
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_realloc(void *ptr, size_t size);
-void	ft_qsort(void *base, int nitems, int size, int (*compar)(const void *, const void *));
+void ft_qsort(void *base, size_t n_items, size_t item_size, int (*compare)(const void *, const void *));
 void	*ft_memcpy(void *dst, const void *src, size_t n);
 
 
