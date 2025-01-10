@@ -13,7 +13,7 @@ void get_folder_paths(const char *path, char ***result, int *count, bool flagA) 
 	while ((entry = readdir(dp))) {
 		if (entry->d_type == DT_DIR) {
 			if (ft_strcmp(entry->d_name, ".") != 0 && ft_strcmp(entry->d_name, "..") != 0) {
-				// Costruiamo il percorso completo
+				//percorso completo
 				char new_path[PATH_SIZE];
 				ft_snprintf(new_path, sizeof(new_path), "%s/%s", path, entry->d_name);
 				(*result) = realloc(*result, sizeof(char *) * (++(*count)));
@@ -48,9 +48,7 @@ int get_directory_blocks(const char *path, t_flag flags) {
 			perror("lstat");
 			continue;
 		}
-		//if (S_ISREG(file_stat.st_mode) || S_ISDIR(file_stat.st_mode)  || S_ISLNK(file_stat.st_mode)) {
-			total_blocks += file_stat.st_blocks;
-		//}
+		total_blocks += file_stat.st_blocks;
 	}
 
 	closedir(dir);
@@ -69,16 +67,15 @@ int get_directory_size(const char *path) {
 	}
 
 	while ((entry = readdir(dir)) != NULL) {
-		if ((ft_strcmp(entry->d_name, ".") == 0) || ft_strcmp(entry->d_name, "..") == 0) {
+		if ((ft_strcmp(entry->d_name, ".") == 0) || ft_strcmp(entry->d_name, "..") == 0)
 			continue;
-		}
 		char full_path[PATH_MAX];
 		ft_snprintf(full_path, sizeof(full_path), "%s/%s", path, entry->d_name);
-		if (lstat(full_path, &file_stat) == -1) {
+		if (lstat(full_path, &file_stat) == -1) 
+		{
 			perror("stat");
 			continue;
 		}
-
 		if (S_ISREG(file_stat.st_mode)) {
 			total_size += file_stat.st_size;
 		} else if (S_ISDIR(file_stat.st_mode)) {
@@ -250,10 +247,8 @@ void sortListByTime(t_output **head, const char *path)
                 current->next = tmp;
             }
         }
-
         current = next;
     }
-
     *head = newList;
 }
 

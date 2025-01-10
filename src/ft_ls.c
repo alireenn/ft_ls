@@ -6,12 +6,10 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	char full_path[1024];
 
 	ft_snprintf(full_path, sizeof(full_path), "%s/%s", path, entry->d_name);
-
 	if (lstat(full_path, &file_stat) == -1) {
 		perror("lstat");
 		return;
 	}
-
 	display_permissions(file_stat.st_mode, full_path);
 	ft_printf("%d ", (int)file_stat.st_nlink);
 
@@ -26,8 +24,6 @@ void display_file_details(const char *path, const struct dirent *entry) {
 	char *time_buf;
 	time_buf = formatTime(ctime(&file_stat.st_mtime));
 	ft_printf("%s", time_buf);
-
-	// Nome del file
 	ft_printf(" %s", entry->d_name);
 
 	if (S_ISLNK(file_stat.st_mode)) {
@@ -119,15 +115,9 @@ int main(int argc, char *argv[]) {
 				else if (argv[i][j] == 'R')
 					flags.R = 1;					
 				else if (argv[i][j] == 'r')
-				{
-					if (!flags.t)
-						flags.r = 1;
-				}
+					flags.r = 1;
 				else if (argv[i][j] == 't')
-				{ 
 					flags.t = 1;
-					flags.r = 0;
-				}
 				else {
 					fprintf(stderr, "Usage: %s [-lartR] [file ...]\n", argv[0]);
 					exit(EXIT_FAILURE);

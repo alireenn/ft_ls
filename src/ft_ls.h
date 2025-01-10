@@ -91,6 +91,7 @@ void	*ft_memcpy(void *dst, const void *src, size_t n);
 void	*ft_realloc(void *ptr, size_t size);
 void ft_qsort(void *base, size_t n_items, size_t item_size, int (*compare)(const void *, const void *));
 void	*ft_memcpy(void *dst, const void *src, size_t n);
+int		compare_paths_tool(const void *a, const void *b);
 
 
 // ----------------------
