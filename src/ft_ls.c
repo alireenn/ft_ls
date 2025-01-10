@@ -155,10 +155,7 @@ int main(int argc, char *argv[]) {
 	}
 	
 	if (flags.r)
-	{
-		printf("cazzo\n");
 		sort_paths_reverse(folders, folder_count);
-	}
 	if (flags.R)
 		ft_printf("%s:\n", path);	
 	list_directory(path, flags);
