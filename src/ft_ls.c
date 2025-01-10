@@ -140,6 +140,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	PathList result;
+	result.capacity=0;
+	result.count=0;
+	result.paths=0;
 	if (flags.R)
 	{
 		get_folder_paths(path, &folders, &folder_count, flags.a);

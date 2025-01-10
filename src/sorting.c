@@ -42,22 +42,26 @@ void ft_qsort(void *base, size_t n_items, size_t item_size, int (*compare)(const
 }
 
 int compare_paths_by_time(const void *a, const void *b) {
+
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
     struct stat stat1, stat2;
+
 
     if (stat(path1, &stat1) != 0 || stat(path2, &stat2) != 0) {
         perror("Errore nell'accedere ai file");
         exit(EXIT_FAILURE);
     }
 
-    if (stat1.st_mtime > stat2.st_mtime) {
+    if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2))
+        return 0;
+
+    if (stat1.st_mtime > stat2.st_mtime) 
         return -1;
-    } else if (stat1.st_mtime < stat2.st_mtime) {
+    else if (stat1.st_mtime < stat2.st_mtime) 
         return 1;
-    } else {
-        return ft_strcmp(path1,path2);
-    }
+    return ft_strcmp(path1,path2);
+
 }
 
 void sort_paths_by_time(char **paths, int count) {
@@ -68,12 +72,7 @@ void sort_paths_by_time(char **paths, int count) {
 int compare_paths(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
-    // if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2)){   
-    //     if(ft_strlen(path1) < ft_strlen(path2))
-    //         return 0;
-    //     else
-    //         return -1;
-    // }       
+   
     char * aux1 = ft_strtrim(path1);
     char * aux2 = ft_strtrim(path2);
     int aux3 = ft_strlowcmp(aux1, aux2);
@@ -88,12 +87,18 @@ void sort_paths_alphabetically(char **paths, int count) {
 }
 
 
+int compare_paths_reverse_tool(const void *a, const void *b) {
+    const char *path1 = *(const char **)a;
+    const char *path2 = *(const char **)b;
+    if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2))
+        return 1;
+    return 0;
+}
+
 int compare_paths_reverse(const void *a, const void *b) {
     const char *path1 = *(const char **)a;
     const char *path2 = *(const char **)b;
 
-    if (!ft_strlowncmp(path1, path2, ft_strlen(path1) -2) || !ft_strlowncmp(path1, path2, ft_strlen(path2)-2))
-        return 0;
 
     char *tmp2 = ft_strtrim(path2);
     char *tmp1 = ft_strtrim(path1);
@@ -106,6 +111,7 @@ int compare_paths_reverse(const void *a, const void *b) {
 
 void sort_paths_reverse(char **paths, int count) {
     ft_qsort(paths, count, sizeof(char *), compare_paths_reverse);
+    ft_qsort(paths, count, sizeof(char *), compare_paths_reverse_tool);
 }
 
 void sortListAlphabetically(t_output **head) {
